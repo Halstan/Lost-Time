@@ -46,13 +46,8 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        },
-        {
           icon: 'mdi-calendar-today',
-          title: 'Evento',
+          title: 'Eventos',
           to: '/eventos'
         }
       ],

@@ -11,6 +11,10 @@ export const mutations = {
   },
   setEvento (state, payload) {
     state.eventos.push(payload)
+  },
+  updateEvento (state, payload) {
+    const index = state.eventos.findIndex(evento => evento.id === payload)
+    state.eventos[index].isDone = true
   }
 }
 export const actions = {
@@ -34,11 +38,23 @@ export const actions = {
       const res = await db.collection('eventos').add({
         creadorPor: payload.nombre,
         titulo: payload.titulo,
-        fechaCreacion: new Date()
+        fechaCreacion: new Date(),
+        isDone: false
       })
       const fecha = (await res.get()).data().fechaCreacion
       // console.log(await (await res.get()).data().fechaCreacion)
       commit('setEvento', { nombre: payload.nombre, titulo: payload.titulo, fechaCreacion: fecha })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  async madeEvent ({ commit }, payload) {
+    try {
+      await db.collection('eventos').doc(payload).update({
+        isDone: true
+      })
+      commit('updateEvento', payload)
     } catch (error) {
       console.log(error)
     }
