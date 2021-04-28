@@ -17,16 +17,6 @@
               invitación
             </a>.
           </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
           <p>Creado por: </p>
           <div class="text-xs-right">
             <em><a href="https://github.com/Halstan" target="_blank">&mdash; Enzo Arauco</a></em>
