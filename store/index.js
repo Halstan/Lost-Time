@@ -3,7 +3,8 @@ import { db } from '@/plugins/firebase'
 
 export const state = () => ({
   eventos: [],
-  evento: {}
+  evento: {},
+  isLoading: false
 })
 export const mutations = {
   setEventos (state, payload) {
@@ -13,8 +14,16 @@ export const mutations = {
     state.eventos.push(payload)
   },
   updateEvento (state, payload) {
+    const index = state.eventos.findIndex(evento => evento.id === payload.id)
+    state.eventos[index].nombre = payload.nombre
+    state.eventos[index].titulo = payload.titulo
+  },
+  isDone (state, payload) {
     const index = state.eventos.findIndex(evento => evento.id === payload)
     state.eventos[index].isDone = true
+  },
+  setLoading (state, payload) {
+    state.isLoading = payload
   }
 }
 export const actions = {
@@ -34,6 +43,7 @@ export const actions = {
   },
 
   async addEvento ({ commit }, payload) {
+    commit('setLoading', true)
     try {
       const res = await db.collection('eventos').add({
         creadorPor: payload.nombre,
@@ -41,22 +51,49 @@ export const actions = {
         fechaCreacion: new Date(),
         isDone: false
       })
-      const fecha = (await res.get()).data().fechaCreacion
+      // const fecha = (await res.get()).data().fechaCreacion
+      const data = (await res.get()).data()
       // console.log(await (await res.get()).data().fechaCreacion)
-      commit('setEvento', { nombre: payload.nombre, titulo: payload.titulo, fechaCreacion: fecha })
+      commit('setEvento', { id: res.id, nombre: data.creadoPor, titulo: data.titulo, fechaCreacion: data.fechaCreacion, isDone: data.isDone })
     } catch (error) {
       console.log(error)
+    } finally {
+      commit('setLoading', false)
     }
   },
 
-  async madeEvent ({ commit }, payload) {
+  async updateEvento ({ commit }, payload) {
+    commit('setLoading', true)
     try {
-      await db.collection('eventos').doc(payload).update({
-        isDone: true
+      await db.collection('eventos').doc(payload.id).update({
+        creadorPor: payload.nombre,
+        titulo: payload.titulo,
+        fechaCreacion: payload.fechaCreacion,
+        isDone: payload.isDone
       })
       commit('updateEvento', payload)
     } catch (error) {
       console.log(error)
+    } finally {
+      commit('setLoading', false)
     }
+  },
+
+  async madeEvent ({ commit }, payload) {
+    commit('setLoading', true)
+    try {
+      await db.collection('eventos').doc(payload).update({
+        isDone: true
+      })
+      commit('isDone', payload)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      commit('setLoading', false)
+    }
+  },
+
+  changeLoading ({ commit }, payload) {
+    commit('setLoading', payload)
   }
 }
