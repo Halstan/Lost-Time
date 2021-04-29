@@ -27,7 +27,7 @@ export const mutations = {
   }
 }
 export const actions = {
-  async nuxtServerInit ({ commit }, { req }) {
+  async getEventos ({ commit }) {
     try {
       const res = await db.collection('eventos').get()
       const eventos = []

@@ -107,10 +107,12 @@ export default {
     }
   },
 
-  created () {},
+  created () {
+    this.getEventos()
+  },
 
   methods: {
-    ...mapActions(['addEvento', 'madeEvent', 'updateEvento', 'changeLoading']),
+    ...mapActions(['getEventos', 'addEvento', 'madeEvent', 'updateEvento', 'changeLoading']),
     insertEvento () {
       delete this.evento.id
       delete this.evento.isDone
