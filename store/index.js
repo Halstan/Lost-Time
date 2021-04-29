@@ -51,9 +51,8 @@ export const actions = {
         fechaCreacion: new Date(),
         isDone: false
       })
-      // const fecha = (await res.get()).data().fechaCreacion
+
       const data = (await res.get()).data()
-      // console.log(await (await res.get()).data().fechaCreacion)
       commit('setEvento', { id: res.id, nombre: data.creadoPor, titulo: data.titulo, fechaCreacion: data.fechaCreacion, isDone: data.isDone })
     } catch (error) {
       console.log(error)
