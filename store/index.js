@@ -27,33 +27,28 @@ export const mutations = {
   }
 }
 export const actions = {
-  async getEventos ({ commit }) {
-    try {
-      const res = await db.collection('eventos').get()
+  getEventos ({ commit }) {
+    const ref = db.collection('eventos')
+    ref.onSnapshot((querySnapshot) => {
       const eventos = []
-      res.forEach((el) => {
-        const evento = el.data()
-        evento.id = el.id
+      querySnapshot.forEach((doc) => {
+        const evento = doc.data()
+        evento.id = doc.id
         eventos.push(evento)
       })
-      return commit('setEventos', eventos)
-    } catch (err) {
-      console.log(err)
-    }
+      commit('setEventos', eventos)
+    })
   },
 
   async addEvento ({ commit }, payload) {
     commit('setLoading', true)
     try {
-      const res = await db.collection('eventos').add({
-        creadorPor: payload.nombre,
+      await db.collection('eventos').add({
+        creadoPor: payload.nombre,
         titulo: payload.titulo,
         fechaCreacion: new Date(),
         isDone: false
       })
-
-      const data = (await res.get()).data()
-      commit('setEvento', { id: res.id, nombre: data.creadoPor, titulo: data.titulo, fechaCreacion: data.fechaCreacion, isDone: data.isDone })
     } catch (error) {
       console.log(error)
     } finally {
@@ -65,12 +60,11 @@ export const actions = {
     commit('setLoading', true)
     try {
       await db.collection('eventos').doc(payload.id).update({
-        creadorPor: payload.nombre,
+        creadoPor: payload.nombre,
         titulo: payload.titulo,
         fechaCreacion: payload.fechaCreacion,
         isDone: payload.isDone
       })
-      commit('updateEvento', payload)
     } catch (error) {
       console.log(error)
     } finally {
@@ -84,7 +78,7 @@ export const actions = {
       await db.collection('eventos').doc(payload).update({
         isDone: true
       })
-      commit('isDone', payload)
+      // commit('isDone', payload)
     } catch (error) {
       console.log(error)
     } finally {

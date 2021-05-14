@@ -117,11 +117,7 @@ export default {
       delete this.evento.id
       delete this.evento.isDone
       this.addEvento(this.evento)
-      this.evento = {
-        id: '',
-        titulo: '',
-        nombre: ''
-      }
+      this.evento = {}
     },
     getDate (timestamp) {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
@@ -138,7 +134,7 @@ export default {
         this.evento = data
         this.evento.titulo = data.titulo
         this.evento.id = res.id
-        this.evento.nombre = data.creadorPor
+        this.evento.nombre = data.creadoPor
         this.isEditable = true
       } catch (error) {
         console.log(error)
@@ -146,18 +142,15 @@ export default {
         this.changeLoading(false)
       }
     },
+
     updEvento () {
       this.updateEvento(this.evento)
     },
     cancelar () {
       this.isEditable = false
-      this.evento = {
-        titulo: '',
-        nombre: ''
-      }
+      this.evento = {}
     }
   }
-
 }
 </script>
 
